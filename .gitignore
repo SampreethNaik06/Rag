@@ -1,0 +1,22 @@
+.env
+.env.local
+.env.*
+!.env.example
+
+# Large model weights and HuggingFace cache
+models--*
+*.safetensors
+CACHEDIR.TAG
+.cache/
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# IDEs & System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
