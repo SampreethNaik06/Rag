@@ -1,19 +1,12 @@
 import os
-
-
-
 import json
 import numpy as np
 import pandas as pd
-from pprint import pprint as original_pprint
 from dateutil import parser
 from sentence_transformers import SentenceTransformer
 import joblib
 from sklearn.metrics.pairwise import cosine_similarity
-import os 
 from openai import OpenAI
-
-model_name = os.path.join(os.environ.get('MODEL_PATH', './'), "BAAI/bge-base-en-v1.5")
 
 model = SentenceTransformer("BAAI/bge-base-en-v1.5", cache_folder=os.environ.get('MODEL_PATH', './'))
 
@@ -57,8 +50,6 @@ def format_date(date_string):
     # Format the date to "YYYY-MM-DD"
     formatted_date = date_object.strftime("%Y-%m-%d")
     return formatted_date
-
-# Read the CSV without parsing dates
 
 def read_dataframe(path):
     if not os.path.exists(path):
@@ -118,28 +109,19 @@ def generate_with_single_input(prompt: str,
 
 
 def concatenate_fields(dataset, fields):
-    # Initialize the list where the texts will be stored    
-    concatenated_data = [] 
+    concatenated_data = []
 
-    # Iterate over movies
     for data in dataset:
-        # Initialize text as an empty string
-        text = "" 
+        text = ""
 
-        # Iterate over the fields
-        for field in fields: 
-            # Get the desired field (if the key is missing an empty string should be used)
-            context = data.get(field, '') 
-
+        for field in fields:
+            context = data.get(field, '')
             if context:
-                # Add the context to the text (add an extra space so fields are separate)
-                text += f"{context} " 
+                text += f"{context} "
 
-        # Strip whitespaces from the text
         text = text.strip()[:493]
-        # Append the text with extra context to the list
-        concatenated_data.append(text) 
-    
+        concatenated_data.append(text)
+
     return concatenated_data
 
 
@@ -151,10 +133,9 @@ def retrieve(query, top_k=5):
     query_embedding = model.encode(query)
 
     similarity_scores = cosine_similarity(query_embedding.reshape(1, -1), EMBEDDINGS)[0]
-    
+
     similarity_indices = np.argsort(-similarity_scores)
 
     top_k_indices = similarity_indices[:top_k]
 
     return top_k_indices
-
