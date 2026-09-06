@@ -1,7 +1,10 @@
+# Environment & Secrets
 .env
-.env.local
 .env.*
-!.env.example
+*.env
+**/.env
+**/.env.*
+!**/.env.example
 
 # Large model weights and HuggingFace cache
 models--*
